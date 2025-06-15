@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useMeQuery } from "@/query/meQuery";
 import { ArrowLeft, MapPin, Clock } from "lucide-react";
 import { Link, useParams } from "react-router";
 
@@ -10,41 +11,42 @@ interface PotholeData {
   image: string;
 }
 
+// 임시 데이터
+const deviceData = {
+  "1": { modelName: "CF-111", busNumber: "3", potholesFound: 4 },
+  "2": { modelName: "CF-123", busNumber: "100", potholesFound: 1 },
+};
+
+const potholeData: PotholeData[] = [
+  {
+    id: "1",
+    discoveryTime: "2025-06-10 | 03:33",
+    location: "부산광역시....",
+    image: "/placeholder.svg?height=200&width=300",
+  },
+  {
+    id: "2",
+    discoveryTime: "2025-06-09 | 14:22",
+    location: "부산광역시 해운대구...",
+    image: "/placeholder.svg?height=200&width=300",
+  },
+  {
+    id: "3",
+    discoveryTime: "2025-06-08 | 09:15",
+    location: "부산광역시 중구...",
+    image: "/placeholder.svg?height=200&width=300",
+  },
+  {
+    id: "4",
+    discoveryTime: "2025-06-07 | 16:45",
+    location: "부산광역시 동래구...",
+    image: "/placeholder.svg?height=200&width=300",
+  },
+];
+
 export function DetailView() {
   const { deviceId } = useParams();
-
-  // 임시 데이터
-  const deviceData = {
-    "1": { modelName: "CF-111", busNumber: "3", potholesFound: 4 },
-    "2": { modelName: "CF-123", busNumber: "100", potholesFound: 1 },
-  };
-
-  const potholeData: PotholeData[] = [
-    {
-      id: "1",
-      discoveryTime: "2025-06-10 | 03:33",
-      location: "부산광역시....",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: "2",
-      discoveryTime: "2025-06-09 | 14:22",
-      location: "부산광역시 해운대구...",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: "3",
-      discoveryTime: "2025-06-08 | 09:15",
-      location: "부산광역시 중구...",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: "4",
-      discoveryTime: "2025-06-07 | 16:45",
-      location: "부산광역시 동래구...",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-  ];
+  const { data: user } = useMeQuery(false);
 
   const device = deviceData[deviceId as keyof typeof deviceData];
 
@@ -65,12 +67,11 @@ export function DetailView() {
               </div>
             </div>
             <div className="text-center text-white">
-              <h2 className="text-lg font-semibold mb-2">관리자 이름</h2>
-              <p className="text-sm opacity-80">정보들..</p>
+              <h2 className="text-lg font-semibold mb-2">{user?.username ?? "관리자 이름"}</h2>
+              <p className="text-sm opacity-80">{user?.email ?? "관리자 이메일"}</p>
             </div>
           </div>
         </div>
-
         {/* 메인 콘텐츠 */}
         <div className="flex-1 p-6 flex items-center justify-center">
           <div className="text-center">
@@ -102,8 +103,8 @@ export function DetailView() {
             </div>
           </div>
           <div className="text-center text-white">
-            <h2 className="text-lg font-semibold mb-2">관리자 이름</h2>
-            <p className="text-sm opacity-80">정보들..</p>
+            <h2 className="text-lg font-semibold mb-2">{user?.username ?? "관리자 이름"}</h2>
+            <p className="text-sm opacity-80">{user?.email ?? "관리자 이메일"}</p>
           </div>
         </div>
       </div>

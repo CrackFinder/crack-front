@@ -42,7 +42,7 @@ export function LoginForm() {
         </div>
 
         {/* 메인 로그인 카드 */}
-        <div className="absolute top-0 left-0 w-full bg-form-background rounded-xl shadow-[0px_0px_5px_3px_rgba(0,0,0,0.4)] pt-10 pb-10 px-10 z-20">
+        <div className="absolute top-0 left-0 w-full bg-form-background rounded-xl shadow-2xl pt-10 pb-10 px-10 z-20">
           <div className="relative">
             {/* 로그인 타이틀 */}
             <h1 className="text-2xl font-bold text-app-text text-center mb-8">로그인</h1>

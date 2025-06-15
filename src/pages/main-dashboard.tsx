@@ -39,7 +39,7 @@ export function MainDashboard() {
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
-  const { data: user, isSuccess } = useMeQuery();
+  const { data: user } = useMeQuery();
 
   const handleDelete = (deviceId: string) => {
     if (confirm("정말로 이 기기를 삭제하시겠습니까?")) {
@@ -87,7 +87,7 @@ export function MainDashboard() {
     <>
       <div className="flex min-h-screen w-full bg-app-background ">
         {/* 왼쪽 사이드바 */}
-        <div className="w-80  bg-lanyard-front flex flex-col rounded-tr-[9rem] ">
+        <div className="w-80  bg-lanyard-front flex flex-col">
           {/* 로고 영역 */}
           <div className="p-6 text-center">
             <div className="text-white text-sm opacity-80 mb-8">로고(생긴다면)</div>
