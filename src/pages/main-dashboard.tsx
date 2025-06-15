@@ -1,0 +1,219 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
+import { RegisterModal } from "./register-modal";
+
+interface Device {
+  id: string;
+  modelName: string;
+  busNumber: string;
+  potholesFound: number;
+  powerStatus: boolean;
+}
+
+export function MainDashboard() {
+  const [devices, setDevices] = useState<Device[]>([
+    {
+      id: "1",
+      modelName: "CF-111",
+      busNumber: "3",
+      potholesFound: 19,
+      powerStatus: true,
+    },
+    {
+      id: "2",
+      modelName: "CF-123",
+      busNumber: "100",
+      potholesFound: 1,
+      powerStatus: true,
+    },
+    {
+      id: "3",
+      modelName: "CF-456",
+      busNumber: "25",
+      potholesFound: 0,
+      powerStatus: false,
+    },
+    {
+      id: "4",
+      modelName: "CF-789",
+      busNumber: "42",
+      potholesFound: 5,
+      powerStatus: false,
+    },
+  ]);
+
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+  const handleDelete = (deviceId: string) => {
+    if (confirm("정말로 이 기기를 삭제하시겠습니까?")) {
+      setDevices(devices.filter((device) => device.id !== deviceId));
+    }
+  };
+
+  const handleRegisterDevice = (deviceData: { modelName: string; busNumber: string; ssid: string }) => {
+    const newDevice: Device = {
+      id: (devices.length + 1).toString(),
+      modelName: deviceData.modelName,
+      busNumber: deviceData.busNumber,
+      potholesFound: 0,
+      powerStatus: true,
+    };
+    setDevices([...devices, newDevice]);
+    setIsRegisterModalOpen(false);
+  };
+
+  const renderPowerStatus = (device: Device, index: number) => {
+    if (device.powerStatus) {
+      return (
+        <>
+          <div className="w-3 h-3 bg-power-on rounded-full mr-2 border-2 border-power-border" />
+          <span className="text-sm font-medium text-power-on">ON</span>
+        </>
+      );
+    } else {
+      // 첫 번째 OFF 기기는 회색, 두 번째 OFF 기기는 빨간색
+      const offDeviceIndex = devices.filter((d, i) => i <= index && !d.powerStatus).length;
+
+      if (offDeviceIndex === 1) {
+        // 첫 번째 OFF 기기 - 회색
+        return (
+          <>
+            <div className="w-3 h-3 bg-gray-400 rounded-full mr-2 border-2 border-gray-500" />
+            <span className="text-sm font-medium text-gray-500">OFF</span>
+          </>
+        );
+      } else {
+        // 두 번째 OFF 기기 - 빨간색
+        return (
+          <>
+            <div className="w-3 h-3 bg-red-500 rounded-full mr-2 border-2 border-red-600" />
+            <span className="text-sm font-medium text-red-500">OFF</span>
+          </>
+        );
+      }
+    }
+  };
+
+  return (
+    <>
+      <div className="flex min-h-screen w-full bg-app-background">
+        {/* 왼쪽 사이드바 */}
+        <div className="w-80 flex-shrink-0 bg-lanyard-front flex flex-col">
+          {/* 로고 영역 */}
+          <div className="p-6 text-center">
+            <div className="text-white text-sm opacity-80 mb-8">로고(생긴다면)</div>
+          </div>
+
+          {/* 관리자 프로필 영역 */}
+          <div className="flex-1 flex flex-col items-center justify-start pt-8">
+            {/* 아바타 */}
+            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-6">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
+                <svg className="w-12 h-12 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* 관리자 정보 */}
+            <div className="text-center text-white">
+              <h2 className="text-lg font-semibold mb-2">관리자 이름</h2>
+              <p className="text-sm opacity-80">정보들..</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 오른쪽 메인 콘텐츠 */}
+        <div className="flex-1 min-w-0 p-6">
+          <div
+            className="bg-form-background shadow-sm border border-gray-200 h-full min-h-[600px]"
+            style={{
+              borderTopRightRadius: "16px",
+              borderTopLeftRadius: "0px",
+              borderBottomRightRadius: "0px",
+              borderBottomLeftRadius: "0px",
+            }}
+          >
+            {/* 관리 기기 헤더 */}
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-app-text">관리 기기</h1>
+                <Button
+                  onClick={() => setIsRegisterModalOpen(true)}
+                  className="bg-lanyard-front hover:bg-lanyard-front/90 text-white px-6 py-2"
+                >
+                  기기 등록
+                </Button>
+              </div>
+            </div>
+
+            {/* 테이블 */}
+            <div className="p-6">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-4 px-4 font-semibold text-app-text">모델명</th>
+                      <th className="text-left py-4 px-4 font-semibold text-app-text">버스번호</th>
+                      <th className="text-left py-4 px-4 font-semibold text-app-text">발견한 포트홀</th>
+                      <th className="text-left py-4 px-4 font-semibold text-app-text">전원상태</th>
+                      <th className="text-center py-4 px-4 font-semibold text-app-text">액션</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {devices.map((device, index) => (
+                      <tr key={device.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-4 px-4 text-app-text font-medium">{device.modelName}</td>
+                        <td className="py-4 px-4 text-app-text">{device.busNumber}</td>
+                        <td className="py-4 px-4 text-app-text">{device.potholesFound}개</td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center">{renderPowerStatus(device, index)}</div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center justify-center space-x-2">
+                            <Button
+                              onClick={() => handleDelete(device.id)}
+                              className="bg-delete-button hover:bg-delete-button/90 text-white px-4 py-1 text-sm"
+                            >
+                              삭제
+                            </Button>
+                            <Link to={`/detail/${device.id}`}>
+                              <Button className="bg-lanyard-front hover:bg-lanyard-front/90 text-white px-4 py-1 text-sm">
+                                상세
+                              </Button>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* 빈 상태 메시지 */}
+              {devices.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-app-text/60 text-lg">등록된 기기가 없습니다.</p>
+                  <Button
+                    onClick={() => setIsRegisterModalOpen(true)}
+                    className="bg-lanyard-front hover:bg-lanyard-front/90 text-white px-6 py-2 mt-4"
+                  >
+                    첫 번째 기기 등록하기
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 등록 모달 */}
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        onRegister={handleRegisterDevice}
+      />
+    </>
+  );
+}
