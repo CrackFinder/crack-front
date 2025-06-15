@@ -39,7 +39,7 @@ export function MainDashboard() {
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
-  const { data: user } = useMeQuery();
+  const { data: user, isSuccess } = useMeQuery();
 
   const handleDelete = (deviceId: string) => {
     if (confirm("정말로 이 기기를 삭제하시겠습니까?")) {

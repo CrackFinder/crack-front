@@ -1,20 +1,19 @@
-import { useQuery, type QueryOptions } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "./axios";
 import type { UserInfo } from "@/type/User";
+import { accessTokenStore } from "@/store/accessTokenStore";
 
 const getMyUserInfo = async () => {
-  try {
-    const response = await axiosInstance.get("/user");
-    return response.data as UserInfo;
-  } catch (error) {
-    throw error.response?.data || { error: "사용자 정보를 가져오는 중 오류가 발생했습니다." };
-  }
+  const response = await axiosInstance.get("/user");
+  return response.data as UserInfo;
 };
 
-export const useMeQuery = (queryOptions?: QueryOptions) => {
+export const useMeQuery = (retry: boolean = true) => {
+  const accessToken = accessTokenStore.getState().accessToken;
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   return useQuery({
     queryKey: ["me"],
     queryFn: getMyUserInfo,
-    ...queryOptions,
+    retry,
   });
 };
