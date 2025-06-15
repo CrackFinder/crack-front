@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { RegisterModal } from "./register-modal";
+import { useMeQuery } from "@/query/meQuery";
 
 interface Device {
   id: string;
@@ -34,16 +35,11 @@ export function MainDashboard() {
       potholesFound: 0,
       powerStatus: false,
     },
-    {
-      id: "4",
-      modelName: "CF-789",
-      busNumber: "42",
-      potholesFound: 5,
-      powerStatus: false,
-    },
   ]);
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+  const { data: user } = useMeQuery();
 
   const handleDelete = (deviceId: string) => {
     if (confirm("정말로 이 기기를 삭제하시겠습니까?")) {
@@ -83,23 +79,15 @@ export function MainDashboard() {
             <span className="text-sm font-medium text-gray-500">OFF</span>
           </>
         );
-      } else {
-        // 두 번째 OFF 기기 - 빨간색
-        return (
-          <>
-            <div className="w-3 h-3 bg-red-500 rounded-full mr-2 border-2 border-red-600" />
-            <span className="text-sm font-medium text-red-500">OFF</span>
-          </>
-        );
       }
     }
   };
 
   return (
     <>
-      <div className="flex min-h-screen w-full bg-app-background">
+      <div className="flex min-h-screen w-full bg-app-background ">
         {/* 왼쪽 사이드바 */}
-        <div className="w-80 flex-shrink-0 bg-lanyard-front flex flex-col">
+        <div className="w-80  bg-lanyard-front flex flex-col rounded-tr-[9rem] ">
           {/* 로고 영역 */}
           <div className="p-6 text-center">
             <div className="text-white text-sm opacity-80 mb-8">로고(생긴다면)</div>
@@ -118,8 +106,8 @@ export function MainDashboard() {
 
             {/* 관리자 정보 */}
             <div className="text-center text-white">
-              <h2 className="text-lg font-semibold mb-2">관리자 이름</h2>
-              <p className="text-sm opacity-80">정보들..</p>
+              <h2 className="text-lg font-semibold mb-2">{user?.username ?? "관리자 이름"}</h2>
+              <p className="text-sm opacity-80">{user?.email ?? "관리자 이메일"}</p>
             </div>
           </div>
         </div>
@@ -128,6 +116,7 @@ export function MainDashboard() {
         <div className="flex-1 min-w-0 p-6">
           <div
             className="bg-form-background shadow-sm border border-gray-200 h-full min-h-[600px]"
+            // className="bg-app-background border-0 border-gray-200 h-full min-h-[600px]"
             style={{
               borderTopRightRadius: "16px",
               borderTopLeftRadius: "0px",
@@ -136,7 +125,7 @@ export function MainDashboard() {
             }}
           >
             {/* 관리 기기 헤더 */}
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200 ">
               <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-app-text">관리 기기</h1>
                 <Button
@@ -172,17 +161,17 @@ export function MainDashboard() {
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex items-center justify-center space-x-2">
+                            <Link to={`/detail/${device.id}`}>
+                              <Button className="bg-lanyard-front hover:bg-lanyard-front/90 text-white px-4 py-1 text-sm">
+                                상세
+                              </Button>
+                            </Link>
                             <Button
                               onClick={() => handleDelete(device.id)}
                               className="bg-delete-button hover:bg-delete-button/90 text-white px-4 py-1 text-sm"
                             >
                               삭제
                             </Button>
-                            <Link to={`/detail/${device.id}`}>
-                              <Button className="bg-lanyard-front hover:bg-lanyard-front/90 text-white px-4 py-1 text-sm">
-                                상세
-                              </Button>
-                            </Link>
                           </div>
                         </td>
                       </tr>

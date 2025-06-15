@@ -52,7 +52,7 @@ export function RegisterForm() {
       </div>
 
       {/* 관리 기기 목록 (간단 버전) */}
-      <Card className="bg-form-background shadow-lg mb-6">
+      <Card className="bg-form-background shadow-lg mb-6 ">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-app-text">관리 기기</h2>

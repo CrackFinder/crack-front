@@ -2,21 +2,32 @@ import type React from "react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useLoginMutation } from "@/query/loginMutation";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { mutate: login } = useLoginMutation();
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "test@example.com" && password === "password") {
-      setError("");
-      alert("로그인 성공!");
-    } else {
-      setError("예외 : 아이디와 비밀번호가 잘못되었습니다.");
-    }
+    login(
+      { email, password },
+      {
+        onSuccess: () => {
+          setError("");
+          alert("로그인 성공!");
+          navigate("/dashboard");
+        },
+        onError: (error) => {
+          setError(error.message);
+        },
+      }
+    );
   };
 
   return (
@@ -31,7 +42,7 @@ export function LoginForm() {
         </div>
 
         {/* 메인 로그인 카드 */}
-        <div className="absolute top-0 left-0 w-full bg-form-background rounded-xl shadow-2xl pt-10 pb-10 px-10 z-20">
+        <div className="absolute top-0 left-0 w-full bg-form-background rounded-xl shadow-[0px_0px_5px_3px_rgba(0,0,0,0.4)] pt-10 pb-10 px-10 z-20">
           <div className="relative">
             {/* 로그인 타이틀 */}
             <h1 className="text-2xl font-bold text-app-text text-center mb-8">로그인</h1>
