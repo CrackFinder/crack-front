@@ -67,12 +67,14 @@ const potholeData: PotholeData[] = [
 
 export function DetailView() {
   const { deviceId } = useParams();
+  console.log("deviceid:", deviceId);
   const device = deviceData[deviceId as keyof typeof deviceData];
+  console.log("2", device);
 
   if (!device) {
     return (
       <div className="flex min-h-screen bg-app-background">
-        {/* 왼쪽 사이드바 */}
+        {/* 왼쪽 사이드바 */}ff
         <Header />
         {/* 메인 콘텐츠 */}
         <div className="flex-1 p-6 flex items-center justify-center">
@@ -88,12 +90,11 @@ export function DetailView() {
       </div>
     );
   }
-
+  console.log("3");
   return (
     <div className="flex min-h-screen bg-app-background">
       {/* 왼쪽 사이드바 */}
       <Header />
-
       {/* 오른쪽 메인 콘텐츠 */}
       <div className="flex-1 p-6">
         <div
