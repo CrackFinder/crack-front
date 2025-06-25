@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { RegisterModal } from "./register-modal";
-import { useMeQuery } from "@/query/meQuery";
+import Header from "@/components/Header";
 
 interface Device {
   id: string;
@@ -38,8 +38,6 @@ export function MainDashboard() {
   ]);
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-
-  const { data: user } = useMeQuery();
 
   const handleDelete = (deviceId: string) => {
     if (confirm("정말로 이 기기를 삭제하시겠습니까?")) {
@@ -87,31 +85,7 @@ export function MainDashboard() {
     <>
       <div className="flex min-h-screen w-full bg-app-background ">
         {/* 왼쪽 사이드바 */}
-        <div className="w-80  bg-lanyard-front flex flex-col">
-          {/* 로고 영역 */}
-          <div className="p-6 text-center">
-            <div className="text-white text-sm opacity-80 mb-8">로고(생긴다면)</div>
-          </div>
-
-          {/* 관리자 프로필 영역 */}
-          <div className="flex-1 flex flex-col items-center justify-start pt-8">
-            {/* 아바타 */}
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-6">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg className="w-12 h-12 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-              </div>
-            </div>
-
-            {/* 관리자 정보 */}
-            <div className="text-center text-white">
-              <h2 className="text-lg font-semibold mb-2">{user?.username ?? "관리자 이름"}</h2>
-              <p className="text-sm opacity-80">{user?.email ?? "관리자 이메일"}</p>
-            </div>
-          </div>
-        </div>
-
+        <Header />
         {/* 오른쪽 메인 콘텐츠 */}
         <div className="flex-1 min-w-0 p-6">
           <div

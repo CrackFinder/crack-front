@@ -2,13 +2,16 @@ import type React from "react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useRegisterMutation } from "@/query/registerMutation";
 
 export function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { mutate: register } = useRegisterMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +34,18 @@ export function SignupForm() {
 
     // 회원가입 성공 시뮬레이션
     setError("");
-    alert("회원가입 성공!");
+    register(
+      { username: name, email, password },
+      {
+        onSuccess: () => {
+          alert("회원가입 성공!");
+          navigate("/login");
+        },
+        onError: (error) => {
+          setError(error.message);
+        },
+      }
+    );
     console.log("회원가입 정보:", { name, email, password });
   };
 

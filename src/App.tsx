@@ -7,6 +7,7 @@ import { DetailView } from "./pages/detail-view";
 import { RegisterForm } from "./pages/register-form";
 import Main from "./pages/main";
 import PrivateRoute from "./components/PrivateRoute";
+import { MapView } from "./pages/map-detail-view";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       />
       <Route path="/detail/:deviceId" element={<DetailView />} />
       <Route path="/register" element={<RegisterForm />} />
+      <Route path="/map/:deviceId" element={<MapView />} />
     </Routes>
   );
 }

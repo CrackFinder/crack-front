@@ -4,7 +4,7 @@ import type { UserInfo } from "@/type/User";
 import { accessTokenStore } from "@/store/accessTokenStore";
 
 const getMyUserInfo = async () => {
-  const response = await axiosInstance.get("/user");
+  const response = await axiosInstance.get("/user/user");
   return response.data as UserInfo;
 };
 

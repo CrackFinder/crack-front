@@ -20,7 +20,6 @@ export function LoginForm() {
       {
         onSuccess: () => {
           setError("");
-          alert("로그인 성공!");
           navigate("/dashboard");
         },
         onError: (error) => {

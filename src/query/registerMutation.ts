@@ -4,7 +4,7 @@ import type { UserRegisterParams } from "@/type/User";
 
 const register = async (userData: UserRegisterParams) => {
   try {
-    const response = await axiosInstance.post("/register", userData);
+    const response = await axiosInstance.post("/auth/register", userData);
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: "회원가입 중 오류가 발생했습니다." };
