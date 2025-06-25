@@ -5,14 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Navigation, Maximize2 } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router";
 
-interface MapViewProps {
-  deviceId: string;
-  potholeId?: string;
-  lat?: string;
-  lng?: string;
-  location?: string;
-}
-
 export function MapView() {
   const { deviceId } = useParams();
   const [searchParams] = useSearchParams();

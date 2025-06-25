@@ -1,5 +1,4 @@
 import { useMeQuery } from "@/query/meQuery";
-import React from "react";
 
 const Header = () => {
   const { data: user } = useMeQuery();

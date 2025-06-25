@@ -6,7 +6,7 @@ function Main() {
   useEffect(() => {
     // 로그인 안되어있을때만 로그인페이지로 이동하게.
     navigate("/login");
-  }, []);
+  }, [navigate]);
 
   return <div></div>;
 }
