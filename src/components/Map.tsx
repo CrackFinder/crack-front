@@ -27,8 +27,7 @@ function Map({ latitude, longitude, ...rest }: MapProps) {
           center: new kakao.maps.LatLng(latitude, longitude),
           level: 5,
         };
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const map = new kakao.maps.Map(el, options);
+        new kakao.maps.Map(el, options);
       }}
     />
   );
