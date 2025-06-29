@@ -21,7 +21,7 @@ function Map({ latitude, longitude, ...rest }: MapProps) {
       style={{ backgroundColor: "red", ...rest.style }}
       ref={(el) => {
         if (!el) return;
-        // mapRef.current = el;
+        console.log("window.kakao", window.kakao);
         const kakao = window.kakao;
         const options = {
           center: new kakao.maps.LatLng(latitude, longitude),
