@@ -45,15 +45,7 @@ export function MainDashboard() {
     }
   };
 
-  const handleRegisterDevice = (deviceData: { modelName: string; busNumber: string; ssid: string }) => {
-    const newDevice: Device = {
-      id: (devices.length + 1).toString(),
-      modelName: deviceData.modelName,
-      busNumber: deviceData.busNumber,
-      potholesFound: 0,
-      powerStatus: true,
-    };
-    setDevices([...devices, newDevice]);
+  const handleRegisterDevice = () => {
     setIsRegisterModalOpen(false);
   };
 

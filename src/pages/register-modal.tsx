@@ -2,25 +2,30 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { useRaspberryRegisterMutation } from "@/query/raspberryRegisterMutation";
 
 interface RegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegister: (data: { modelName: string; busNumber: string; ssid: string }) => void;
+  onRegister: () => void;
 }
 
 export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProps) {
-  const [modelName, setModelName] = useState("");
-  const [busNumber, setBusNumber] = useState("");
-  const [ssid, setSsid] = useState("");
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [ip, setIp] = useState("");
+  const [port, setPort] = useState("");
   const [error, setError] = useState("");
+
+  const { mutate: register } = useRaspberryRegisterMutation();
 
   // 모달이 열릴 때마다 폼 초기화
   useEffect(() => {
     if (isOpen) {
-      setModelName("");
-      setBusNumber("");
-      setSsid("");
+      setId("");
+      setName("");
+      setIp("");
+      setPort("");
       setError("");
     }
   }, [isOpen]);
@@ -53,23 +58,35 @@ export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProp
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!modelName.trim()) {
-      setError("예외 : 기기번호(모델명)를 입력해 주세요");
+    if (!id.trim()) {
+      setError("예외 : ID를 입력해 주세요");
       return;
     }
 
-    if (!busNumber.trim()) {
-      setError("예외 : 버스번호를 입력해 주세요");
+    if (!name.trim()) {
+      setError("예외 : 이름을 입력해 주세요");
       return;
     }
 
-    if (!ssid.trim()) {
-      setError("예외 : 기기 SSID를 입력해 주세요");
+    if (!ip.trim()) {
+      setError("예외 : IP 주소를 입력해 주세요");
+      return;
+    }
+
+    if (!port.trim()) {
+      setError("예외 : 포트를 입력해 주세요");
+      return;
+    }
+
+    const portNumber = parseInt(port, 10);
+    if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
+      setError("예외 : 유효한 포트 번호를 입력해 주세요 (1-65535)");
       return;
     }
 
     setError("");
-    onRegister({ modelName, busNumber, ssid });
+    register({ id, name, ip, port: portNumber });
+    onRegister();
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -99,44 +116,60 @@ export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProp
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="modal-modelName" className="block text-sm font-medium text-app-text mb-2">
-                기기번호(모델명)
+              <label htmlFor="modal-id" className="block text-sm font-medium text-app-text mb-2">
+                ID
               </label>
               <Input
-                id="modal-modelName"
+                id="modal-id"
                 type="text"
-                value={modelName}
-                onChange={(e) => setModelName(e.target.value)}
-                placeholder="CF-111"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                placeholder="ID를 입력하세요"
                 className="w-full rounded-md border-gray-300 focus:border-lanyard-front focus:ring-lanyard-front text-app-text"
                 autoFocus
               />
             </div>
 
             <div>
-              <label htmlFor="modal-busNumber" className="block text-sm font-medium text-app-text mb-2">
-                버스번호
+              <label htmlFor="modal-name" className="block text-sm font-medium text-app-text mb-2">
+                이름
               </label>
               <Input
-                id="modal-busNumber"
+                id="modal-name"
                 type="text"
-                value={busNumber}
-                onChange={(e) => setBusNumber(e.target.value)}
-                placeholder="버스번호를 입력하세요"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="이름을 입력하세요"
                 className="w-full rounded-md border-gray-300 focus:border-lanyard-front focus:ring-lanyard-front text-app-text"
               />
             </div>
 
             <div>
-              <label htmlFor="modal-ssid" className="block text-sm font-medium text-app-text mb-2">
-                기기 SSID
+              <label htmlFor="modal-ip" className="block text-sm font-medium text-app-text mb-2">
+                IP 주소
               </label>
               <Input
-                id="modal-ssid"
+                id="modal-ip"
                 type="text"
-                value={ssid}
-                onChange={(e) => setSsid(e.target.value)}
-                placeholder="기기 SSID를 입력하세요"
+                value={ip}
+                onChange={(e) => setIp(e.target.value)}
+                placeholder="192.168.1.1"
+                className="w-full rounded-md border-gray-300 focus:border-lanyard-front focus:ring-lanyard-front text-app-text"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="modal-port" className="block text-sm font-medium text-app-text mb-2">
+                포트
+              </label>
+              <Input
+                id="modal-port"
+                type="number"
+                value={port}
+                onChange={(e) => setPort(e.target.value)}
+                placeholder="8080"
+                min="1"
+                max="65535"
                 className="w-full rounded-md border-gray-300 focus:border-lanyard-front focus:ring-lanyard-front text-app-text"
               />
             </div>
