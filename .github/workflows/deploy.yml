@@ -18,6 +18,8 @@ jobs:
         with:
           persist-credentials: false # GITHUB_TOKEN 정보 초기화
 
+      - name: Test get variable exported by push-to-another-repository
+        run: echo ${{ secrets.AUTO_ACTIONS }}
       # 2) 다른 레포지토리에 푸시
       - name: Push to other repo
         uses: ad-m/github-push-action@master
