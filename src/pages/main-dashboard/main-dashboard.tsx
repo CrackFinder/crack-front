@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
-import { RegisterModal } from "./register-modal";
+import { RegisterModal } from "../register-modal";
 import Header from "@/components/Header";
+import { useRaspberriesQuery } from "./useRaspberriesQuery";
+import { useRaspberryDeleteMutation } from "./useRaspberryDeleteMutation";
+import { useRaspberryCreateMutation } from "./useRaspberryCreateMutation";
 
 interface Device {
   id: string;
@@ -13,6 +16,7 @@ interface Device {
 }
 
 export function MainDashboard() {
+  const { data: raspberrys, isSuccess } = useRaspberriesQuery();
   const [devices, setDevices] = useState<Device[]>([
     {
       id: "1",
@@ -36,43 +40,38 @@ export function MainDashboard() {
       powerStatus: false,
     },
   ]);
-
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const { mutate: deleteRaspberry } = useRaspberryDeleteMutation();
+  const { mutate: createRaspberry } = useRaspberryCreateMutation();
+  if (!isSuccess) {
+    return <div>Loading...</div>;
+  }
 
   const handleDelete = (deviceId: string) => {
     if (confirm("정말로 이 기기를 삭제하시겠습니까?")) {
+      deleteRaspberry(deviceId);
       setDevices(devices.filter((device) => device.id !== deviceId));
     }
   };
 
-  const handleRegisterDevice = () => {
-    setIsRegisterModalOpen(false);
-  };
-
-  const renderPowerStatus = (device: Device, index: number) => {
-    if (device.powerStatus) {
+  const renderPowerStatus = (isOnline: boolean) => {
+    if (isOnline) {
       return (
         <>
           <div className="w-3 h-3 bg-power-on rounded-full mr-2 border-2 border-power-border" />
           <span className="text-sm font-medium text-power-on">ON</span>
         </>
       );
-    } else {
-      // 첫 번째 OFF 기기는 회색, 두 번째 OFF 기기는 빨간색
-      const offDeviceIndex = devices.filter((d, i) => i <= index && !d.powerStatus).length;
-
-      if (offDeviceIndex === 1) {
-        // 첫 번째 OFF 기기 - 회색
-        return (
-          <>
-            <div className="w-3 h-3 bg-gray-400 rounded-full mr-2 border-2 border-gray-500" />
-            <span className="text-sm font-medium text-gray-500">OFF</span>
-          </>
-        );
-      }
     }
+    return (
+      <>
+        <div className="w-3 h-3 bg-gray-400 rounded-full mr-2 border-2 border-gray-500" />
+        <span className="text-sm font-medium text-gray-500">OFF</span>
+      </>
+    );
   };
 
+  console.log(raspberrys.data.raspberries);
   return (
     <>
       <div className="flex min-h-screen w-full bg-app-background ">
@@ -117,13 +116,38 @@ export function MainDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {devices.map((device, index) => (
+                    {raspberrys.data.raspberries.map((raspberry) => (
+                      <tr key={raspberry.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-4 px-4 text-app-text font-medium">{raspberry.name}</td>
+                        <td className="py-4 px-4 text-app-text">{raspberry.name}</td>
+                        <td className="py-4 px-4 text-app-text">{raspberry.potholes.length}개</td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center">{renderPowerStatus(raspberry.status === "online")}</div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center justify-center space-x-2">
+                            <Link to={`/detail/${raspberry.id}`}>
+                              <Button className="bg-lanyard-front hover:bg-lanyard-front/90 text-white px-4 py-1 text-sm">
+                                상세
+                              </Button>
+                            </Link>
+                            <Button
+                              onClick={() => handleDelete(raspberry.id)}
+                              className="bg-delete-button hover:bg-delete-button/90 text-white px-4 py-1 text-sm"
+                            >
+                              삭제
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {devices.map((device) => (
                       <tr key={device.id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-4 px-4 text-app-text font-medium">{device.modelName}</td>
                         <td className="py-4 px-4 text-app-text">{device.busNumber}</td>
                         <td className="py-4 px-4 text-app-text">{device.potholesFound}개</td>
                         <td className="py-4 px-4">
-                          <div className="flex items-center">{renderPowerStatus(device, index)}</div>
+                          <div className="flex items-center">{renderPowerStatus(device.powerStatus)}</div>
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex items-center justify-center space-x-2">
@@ -167,7 +191,7 @@ export function MainDashboard() {
       <RegisterModal
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
-        onRegister={handleRegisterDevice}
+        onRegister={createRaspberry}
       />
     </>
   );

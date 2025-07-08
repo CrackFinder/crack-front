@@ -3,11 +3,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useRaspberryRegisterMutation } from "@/query/raspberryRegisterMutation";
+import type { Raspberry } from "@/type/Raspberry";
 
 interface RegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegister: () => void;
+  onRegister: (raspberry: Omit<Raspberry, "id">) => void;
+}
+function getError(id: string, name: string, ip: string, port: string) {
+  if (!id.trim()) return "ID를 입력해 주세요";
+  if (!name.trim()) return "이름을 입력해 주세요";
+  if (!ip.trim()) return "IP 주소를 입력해 주세요";
+  if (!port.trim()) return "포트를 입력해 주세요";
+  const portNumber = parseInt(port);
+  if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
+    return "유효한 포트 번호를 입력해 주세요 (1-65535)";
+  }
+  return "";
 }
 
 export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProps) {
@@ -15,7 +27,7 @@ export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProp
   const [name, setName] = useState("");
   const [ip, setIp] = useState("");
   const [port, setPort] = useState("");
-  const [error, setError] = useState("");
+  const error = getError(id, name, ip, port);
 
   const { mutate: register } = useRaspberryRegisterMutation();
 
@@ -26,7 +38,6 @@ export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProp
       setName("");
       setIp("");
       setPort("");
-      setError("");
     }
   }, [isOpen]);
 
@@ -58,35 +69,10 @@ export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProp
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!id.trim()) {
-      setError("예외 : ID를 입력해 주세요");
-      return;
-    }
-
-    if (!name.trim()) {
-      setError("예외 : 이름을 입력해 주세요");
-      return;
-    }
-
-    if (!ip.trim()) {
-      setError("예외 : IP 주소를 입력해 주세요");
-      return;
-    }
-
-    if (!port.trim()) {
-      setError("예외 : 포트를 입력해 주세요");
-      return;
-    }
-
     const portNumber = parseInt(port, 10);
-    if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
-      setError("예외 : 유효한 포트 번호를 입력해 주세요 (1-65535)");
-      return;
-    }
 
-    setError("");
     register({ id, name, ip, port: portNumber });
-    onRegister();
+    // onRegister({ name, ip, port: portNumber });
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
