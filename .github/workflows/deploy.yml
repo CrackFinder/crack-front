@@ -13,13 +13,13 @@ jobs:
 
       - name: Install mustache (to update the date)
         run: apk add ruby && gem install mustache
-
+      - name: Test get variable exported by push-to-another-repository
+        run: echo ${{ secrets.AUTO_ACTIONS }}
       - name: Pushes to another repository
         id: push_directory
         uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
         with:
+          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
           source-directory: "output"
           destination-github-username: secgyu
           destination-repository-name: CrackFinder/crack-front
