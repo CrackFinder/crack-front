@@ -30,7 +30,7 @@ export function RegisterModal({ isOpen, onClose, onRegister }: RegisterModalProp
   const error = getError(id, name, ip, port);
 
   const { mutate: register } = useRaspberryRegisterMutation();
-  //
+
   // 모달이 열릴 때마다 폼 초기화
   useEffect(() => {
     if (isOpen) {
