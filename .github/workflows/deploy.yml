@@ -8,7 +8,9 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       # 1) 원본 레포 체크아웃
       - name: Checkout source
@@ -16,15 +18,9 @@ jobs:
         with:
           persist-credentials: false # GITHUB_TOKEN 정보 초기화
 
-      # 2) 빌드 (선택)
-      - name: Build project
-        run: |
-          npm install
-          npm run build
-
-      # 3) 다른 레포지토리에 푸시
+      # 2) 다른 레포지토리에 푸시
       - name: Push to other repo
-        uses: ad-m/github-push-action@v0.6.0
+        uses: ad-m/github-push-action@master
         with:
           # 타깃 레포지토리(“owner/name”)
           repository: CrackFinder/crack-front
@@ -32,5 +28,3 @@ jobs:
           branch: main
           # secrets에 저장한 Personal Access Token
           github_token: ${{ secrets.AUTO_ACTIONS }}
-          # 푸시할 디렉토리 경로 (빌드 산출물이 담긴 폴더)
-          directory: build
