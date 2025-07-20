@@ -25,4 +25,5 @@ export interface Pothole {
   latitude: number;
   longitude: number;
   created_at: string;
+  status: string;
 }
