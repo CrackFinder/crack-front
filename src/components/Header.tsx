@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import axiosInstance from "@/query/axios";
 import { accessTokenStore } from "@/store/accessTokenStore";
 
-const Header = ({ className = "" }: { className?: string }) => {
+const Header = ({ className = "", onClose }: { className?: string; onClose?: () => void }) => {
   const { data: user } = useMeQuery();
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const Header = ({ className = "" }: { className?: string }) => {
       <div className="relative z-10 flex flex-col h-full">
         {/* 모바일 닫기 버튼 */}
         <div className="lg:hidden flex justify-end p-4">
-          <Button onClick={() => {}} variant="ghost" size="sm" className="text-white hover:bg-white/10">
+          <Button onClick={onClose} variant="ghost" size="sm" className="text-white hover:bg-white/10">
             <X className="w-5 h-5" />
           </Button>
         </div>

@@ -67,7 +67,7 @@ export function MainDashboard() {
             <div className="lg:hidden fixed inset-0 z-50 flex">
               <div className="fixed inset-0 bg-black/50" onClick={() => setIsSidebarOpen(false)} />
               <div className="relative w-80 max-w-[80vw]">
-                <Header className="h-full" />
+                <Header className="h-full" onClose={() => setIsSidebarOpen(false)} />
               </div>
             </div>
           </>

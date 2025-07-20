@@ -2,13 +2,15 @@ import Header from "@/components/Header";
 import Map from "@/components/Map";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Maximize2 } from "lucide-react";
+import { ArrowLeft, MapPin, Maximize2, Menu } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { useRaspberryQuery } from "./useRaspberryQuery";
+import { useState } from "react";
 
 export function DetailView() {
   const { deviceId } = useParams();
   const { data: raspberry, isSuccess } = useRaspberryQuery(deviceId!);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (!isSuccess) {
     return (
@@ -33,7 +35,20 @@ export function DetailView() {
   return (
     <div className="flex min-h-screen bg-app-background">
       {/* 왼쪽 사이드바 */}
-      <Header />
+      <div className="hidden lg:block w-80 flex-shrink-0">
+        <Header className="h-full" />
+      </div>
+
+      {isSidebarOpen && (
+        <>
+          <div className="lg:hidden fixed inset-0 z-50 flex">
+            <div className="fixed inset-0 bg-black/50" onClick={() => setIsSidebarOpen(false)} />
+            <div className="relative w-80 max-w-[80vw]">
+              <Header className="h-full" onClose={() => setIsSidebarOpen(false)} />
+            </div>
+          </div>
+        </>
+      )}
       <div className="flex-1 p-6">
         <div
           className="bg-form-background shadow-sm border border-gray-200 h-full"
@@ -46,6 +61,14 @@ export function DetailView() {
         >
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
+              <Button
+                onClick={() => setIsSidebarOpen(true)}
+                variant="ghost"
+                size="sm"
+                className="lg:hidden text-app-text hover:bg-gray-100"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
               <h1 className="text-2xl font-bold text-app-text">{raspberry.data.name} 상세 정보</h1>
               <Link to="/dashboard">
                 <Button variant="outline" className="flex items-center space-x-2">
