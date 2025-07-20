@@ -56,22 +56,7 @@ export function MainDashboard() {
   return (
     <>
       <div className="flex min-h-screen w-full bg-app-background">
-        {/* 데스크톱 사이드바 */}
-        <div className="hidden lg:block w-80 flex-shrink-0">
-          <Header className="h-full" />
-        </div>
-
-        {/* 모바일 사이드바 오버레이 */}
-        {isSidebarOpen && (
-          <>
-            <div className="lg:hidden fixed inset-0 z-50 flex">
-              <div className="fixed inset-0 bg-black/50" onClick={() => setIsSidebarOpen(false)} />
-              <div className="relative w-80 max-w-[80vw]">
-                <Header className="h-full" onClose={() => setIsSidebarOpen(false)} />
-              </div>
-            </div>
-          </>
-        )}
+        <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* 메인 콘텐츠 */}
         <div className="flex-1 min-w-0 p-3 lg:p-6">

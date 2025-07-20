@@ -5,7 +5,36 @@ import { Button } from "./ui/button";
 import axiosInstance from "@/query/axios";
 import { accessTokenStore } from "@/store/accessTokenStore";
 
-const Header = ({ className = "", onClose }: { className?: string; onClose?: () => void }) => {
+const Header = ({
+  isSidebarOpen,
+  setIsSidebarOpen,
+}: {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isSidebarOpen: boolean) => void;
+}) => {
+  return (
+    <>
+      {/* 데스크톱 사이드바 */}
+      <div className="hidden lg:block w-80 flex-shrink-0">
+        <HeaderComponent className="h-full" />
+      </div>
+
+      {/* 모바일 사이드바 오버레이 */}
+      {isSidebarOpen && (
+        <>
+          <div className="lg:hidden fixed inset-0 z-50 flex">
+            <div className="fixed inset-0 bg-black/50" onClick={() => setIsSidebarOpen(false)} />
+            <div className="relative w-80 max-w-[80vw]">
+              <HeaderComponent className="h-full" onClose={() => setIsSidebarOpen(false)} />
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+const HeaderComponent = ({ className = "", onClose }: { className?: string; onClose?: () => void }) => {
   const { data: user } = useMeQuery();
   const navigate = useNavigate();
 

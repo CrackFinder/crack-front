@@ -34,21 +34,8 @@ export function DetailView() {
   const device = raspberry.data;
   return (
     <div className="flex min-h-screen bg-app-background">
-      {/* 왼쪽 사이드바 */}
-      <div className="hidden lg:block w-80 flex-shrink-0">
-        <Header className="h-full" />
-      </div>
+      <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-      {isSidebarOpen && (
-        <>
-          <div className="lg:hidden fixed inset-0 z-50 flex">
-            <div className="fixed inset-0 bg-black/50" onClick={() => setIsSidebarOpen(false)} />
-            <div className="relative w-80 max-w-[80vw]">
-              <Header className="h-full" onClose={() => setIsSidebarOpen(false)} />
-            </div>
-          </div>
-        </>
-      )}
       <div className="flex-1 p-6">
         <div
           className="bg-form-background shadow-sm border border-gray-200 h-full"
