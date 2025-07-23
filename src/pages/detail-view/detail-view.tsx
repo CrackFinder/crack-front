@@ -194,7 +194,7 @@ export function DetailView() {
                         <div className="space-y-2">
                           <p className="text-sm text-app-text/70 mb-2">포트홀 이미지</p>
                           <img
-                            src={pothole?.image || "/placeholder.svg"}
+                            src={`${import.meta.env.VITE_API_BASE_URL}/${pothole.video_path ?? "placeholder.svg"}`}
                             alt="포트홀 이미지"
                             className="w-full h-48 object-cover rounded-lg border border-gray-200"
                           />
