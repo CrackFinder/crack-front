@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Button } from "./ui/button";
 import axiosInstance from "@/query/axios";
 import { accessTokenStore } from "@/store/accessTokenStore";
+import useSidebar from "./useSidebar";
 
 const Header = ({
   isSidebarOpen,
@@ -36,6 +37,7 @@ const Header = ({
 
 const HeaderComponent = ({ className = "", onClose }: { className?: string; onClose?: () => void }) => {
   const { data: user } = useMeQuery();
+  const { potholesCount, deviceCount, activeDeviceCount } = useSidebar();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -112,11 +114,11 @@ const HeaderComponent = ({ className = "", onClose }: { className?: string; onCl
               {/* 사용자 통계 */}
               <div className="grid grid-cols-2 gap-3 text-center">
                 <div className="bg-white/10 rounded-lg p-2">
-                  <div className="text-white font-bold text-sm lg:text-base">{"x개"}</div>
+                  <div className="text-white font-bold text-sm lg:text-base">{`${deviceCount ?? "?"}개`}</div>
                   <div className="text-white/70 text-xs">관리 기기</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-2">
-                  <div className="text-white font-bold text-sm lg:text-base">{"y개"}</div>
+                  <div className="text-white font-bold text-sm lg:text-base">{`${potholesCount ?? "?"}개`}</div>
                   <div className="text-white/70 text-xs">발견 포트홀</div>
                 </div>
               </div>
@@ -138,7 +140,7 @@ const HeaderComponent = ({ className = "", onClose }: { className?: string; onCl
                   </div>
                   <span className="text-white/90 text-xs lg:text-sm">총 기기</span>
                 </div>
-                <span className="text-white font-bold text-sm lg:text-base">{"a개"}</span>
+                <span className="text-white font-bold text-sm lg:text-base">{`${deviceCount}개`}</span>
               </div>
             </div>
 
@@ -150,7 +152,7 @@ const HeaderComponent = ({ className = "", onClose }: { className?: string; onCl
                   </div>
                   <span className="text-white/90 text-xs lg:text-sm">활성 기기</span>
                 </div>
-                <span className="text-green-300 font-bold text-sm lg:text-base">{"b개"}</span>
+                <span className="text-green-300 font-bold text-sm lg:text-base">{`${activeDeviceCount}개`}</span>
               </div>
             </div>
 
@@ -162,7 +164,7 @@ const HeaderComponent = ({ className = "", onClose }: { className?: string; onCl
                   </div>
                   <span className="text-white/90 text-xs lg:text-sm">총 포트홀</span>
                 </div>
-                <span className="text-orange-300 font-bold text-sm lg:text-base">{"c개"}</span>
+                <span className="text-orange-300 font-bold text-sm lg:text-base">{`${potholesCount}개`}</span>
               </div>
             </div>
           </div>
